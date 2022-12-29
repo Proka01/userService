@@ -3,6 +3,7 @@ package com.CarRent.userService.service.impl;
 import com.CarRent.userService.dto.*;
 import com.CarRent.userService.exception.NotFoundException;
 import com.CarRent.userService.mapper.ManagerMapper;
+import com.CarRent.userService.model.Role;
 import com.CarRent.userService.model.User;
 import com.CarRent.userService.repository.UserRepository;
 import com.CarRent.userService.security.TokenService;
@@ -37,7 +38,7 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     public TokenResponseDto login(TokenRequestDto tokenRequestDto) {
         User user = userRepository
-                .findUserByUsernameAndPassword(tokenRequestDto.getUsername(), tokenRequestDto.getPassword())
+                .findUserByUsernameAndPasswordAndRole_Id(tokenRequestDto.getUsername(), tokenRequestDto.getPassword(), 2L)
                 .orElseThrow(() -> new NotFoundException(String
                         .format("User with username: %s and password: %s not found.", tokenRequestDto.getUsername(),
                                 tokenRequestDto.getPassword())));

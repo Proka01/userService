@@ -1,9 +1,6 @@
 package com.CarRent.userService.controller;
 
-import com.CarRent.userService.dto.ClientDto;
-import com.CarRent.userService.dto.ClientRegisterDto;
-import com.CarRent.userService.dto.ManagerDto;
-import com.CarRent.userService.dto.ManagerRegisterDto;
+import com.CarRent.userService.dto.*;
 import com.CarRent.userService.service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,5 +25,10 @@ public class ManagerController {
     @PostMapping("/register")
     public ResponseEntity<ManagerDto> saveUser(@RequestBody @Validated ManagerRegisterDto managerRegisterDto) {
         return new ResponseEntity<>(managerService.insertManager(managerRegisterDto), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<TokenResponseDto> loginClient(@RequestBody @Validated TokenRequestDto tokenRequestDto) {
+        return new ResponseEntity<>(managerService.login(tokenRequestDto), HttpStatus.CREATED);
     }
 }

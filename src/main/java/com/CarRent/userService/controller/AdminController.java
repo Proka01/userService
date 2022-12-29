@@ -1,9 +1,6 @@
 package com.CarRent.userService.controller;
 
-import com.CarRent.userService.dto.ClientDto;
-import com.CarRent.userService.dto.ClientRestrictDto;
-import com.CarRent.userService.dto.ManagerDto;
-import com.CarRent.userService.dto.ManagerRegisterDto;
+import com.CarRent.userService.dto.*;
 import com.CarRent.userService.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,5 +21,10 @@ public class AdminController {
     @PostMapping("/restrict")
     public ResponseEntity<ClientDto> saveUser(@RequestBody @Validated ClientRestrictDto clientRestrictDto) {
         return new ResponseEntity<>(adminService.updateClientRestricted(clientRestrictDto), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<TokenResponseDto> loginClient(@RequestBody @Validated TokenRequestDto tokenRequestDto) {
+        return new ResponseEntity<>(adminService.login(tokenRequestDto), HttpStatus.CREATED);
     }
 }

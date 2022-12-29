@@ -1,4 +1,4 @@
-package com.CarRent.userService.security;
+package com.CarRent.userService.security.service;
 
 import io.jsonwebtoken.Claims;
 

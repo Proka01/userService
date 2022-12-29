@@ -1,6 +1,7 @@
 package com.CarRent.userService.controller;
 
 import com.CarRent.userService.dto.*;
+import com.CarRent.userService.security.CheckSecurity;
 import com.CarRent.userService.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,8 @@ public class AdminController {
     }
 
     @PostMapping("/restrict")
-    public ResponseEntity<ClientDto> saveUser(@RequestBody @Validated ClientRestrictDto clientRestrictDto) {
+    @CheckSecurity(roles = {"ROLE_ADMIN"})
+    public ResponseEntity<ClientDto> saveUser(@RequestBody @Validated ClientRestrictDto clientRestrictDto, @RequestHeader("Authorization") String authorization) {
         return new ResponseEntity<>(adminService.updateClientRestricted(clientRestrictDto), HttpStatus.CREATED);
     }
 

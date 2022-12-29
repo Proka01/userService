@@ -1,6 +1,6 @@
-package com.CarRent.userService.security.impl;
+package com.CarRent.userService.security.service.impl;
 
-import com.CarRent.userService.security.TokenService;
+import com.CarRent.userService.security.service.TokenService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

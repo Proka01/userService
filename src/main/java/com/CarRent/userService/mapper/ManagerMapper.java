@@ -32,7 +32,7 @@ public class ManagerMapper {
 
         user.setCompanyName(managerRegisterDto.getCompanyName());
 
-        user.setRole(roleRepository.findRoleByName("ROLE_MANAGER"));
+        user.setRole(roleRepository.findRoleByName("ROLE_MANAGER").get());
         user.setHireDate(Date.valueOf(LocalDate.now()));
 
         return user;

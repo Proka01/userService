@@ -30,7 +30,7 @@ public class ClientMapper {
         user.setLastName(clientRegisterDto.getLastName());
         user.setPassportNumber(clientRegisterDto.getPassportNumber());
 
-        user.setRole(roleRepository.findRoleByName("ROLE_USER"));
+        user.setRole(roleRepository.findRoleByName("ROLE_USER").get());
         user.setRestricted(false);
         user.setRentDaysNumber(0L);
 

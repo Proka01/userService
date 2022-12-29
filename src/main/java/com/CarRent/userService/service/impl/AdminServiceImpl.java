@@ -24,7 +24,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public ClientDto updateClientRestricted(ClientRestrictDto clientRestrictDto) {
-        User user = userRepository.findByUsername(clientRestrictDto.getUsername());
+        User user = userRepository.findByUsername(clientRestrictDto.getUsername()).get();
         user.setRestricted(clientRestrictDto.isRestricted());
         userRepository.save(user);
         return clientMapper.clientToClientDto(user);

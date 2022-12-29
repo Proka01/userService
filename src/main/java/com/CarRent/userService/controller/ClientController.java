@@ -2,6 +2,8 @@ package com.CarRent.userService.controller;
 
 import com.CarRent.userService.dto.ClientDto;
 import com.CarRent.userService.dto.ClientRegisterDto;
+import com.CarRent.userService.dto.TokenRequestDto;
+import com.CarRent.userService.dto.TokenResponseDto;
 import com.CarRent.userService.service.ClientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,4 +28,8 @@ public class ClientController {
         return new ResponseEntity<>(clientService.insertClient(clientRegisterDto), HttpStatus.CREATED);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<TokenResponseDto> loginClient(@RequestBody @Validated TokenRequestDto tokenRequestDto) {
+        return new ResponseEntity<>(clientService.login(tokenRequestDto), HttpStatus.CREATED);
+    }
 }

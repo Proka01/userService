@@ -2,6 +2,7 @@ package com.CarRent.userService.mapper;
 
 import com.CarRent.userService.dto.ClientDto;
 import com.CarRent.userService.dto.ClientRegisterDto;
+import com.CarRent.userService.dto.ClientRestrictDto;
 import com.CarRent.userService.model.Role;
 import com.CarRent.userService.model.User;
 import com.CarRent.userService.repository.RoleRepository;
@@ -52,6 +53,13 @@ public class ClientMapper {
         clientDto.setRentDaysNumber(user.getRentDaysNumber());
         clientDto.setRestricted(user.getRestricted());
         return clientDto;
+    }
+
+    public User clientRestrictDtoToUser(ClientRestrictDto clientRestrictDto){
+        User user = new User();
+        user.setRestricted(clientRestrictDto.isRestricted());
+        user.setUsername(clientRestrictDto.getUsername());
+        return user;
     }
 
 }

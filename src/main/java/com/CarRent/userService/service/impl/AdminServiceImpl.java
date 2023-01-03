@@ -12,8 +12,8 @@ import com.CarRent.userService.security.service.TokenService;
 import com.CarRent.userService.service.AdminService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional

@@ -1,7 +1,6 @@
 package com.CarRent.userService.dto;
 
 import com.CarRent.userService.model.Role;
-import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 

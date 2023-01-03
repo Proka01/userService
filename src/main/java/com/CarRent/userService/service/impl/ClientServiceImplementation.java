@@ -1,10 +1,8 @@
 package com.CarRent.userService.service.impl;
 
-import com.CarRent.userService.dto.ClientDto;
-import com.CarRent.userService.dto.ClientRegisterDto;
-import com.CarRent.userService.dto.TokenRequestDto;
-import com.CarRent.userService.dto.TokenResponseDto;
+import com.CarRent.userService.dto.*;
 import com.CarRent.userService.exception.NotFoundException;
+import com.CarRent.userService.helper.MessageHelper;
 import com.CarRent.userService.mapper.ClientMapper;
 import com.CarRent.userService.model.User;
 import com.CarRent.userService.repository.UserRepository;
@@ -12,6 +10,8 @@ import com.CarRent.userService.security.service.TokenService;
 import com.CarRent.userService.service.ClientService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,18 +21,31 @@ public class ClientServiceImplementation implements ClientService {
 
     private UserRepository userRepository;
     private ClientMapper clientMapper;
+    private MessageHelper messageHelper;
+    private JmsTemplate jmsTemplate;
+    private String destination;
     private final TokenService tokenService;
 
-    public ClientServiceImplementation(UserRepository userRepository, ClientMapper clientMapper, TokenService tokenService) {
+    public ClientServiceImplementation(UserRepository userRepository, ClientMapper clientMapper,
+                                       TokenService tokenService, JmsTemplate jmsTemplate,
+                                       @Value("${destination.createNotification}") String destination, MessageHelper messageHelper) {
         this.userRepository = userRepository;
         this.clientMapper = clientMapper;
         this.tokenService = tokenService;
+        this.jmsTemplate = jmsTemplate;
+        this.messageHelper = messageHelper;
+        this.destination = destination;
     }
 
     @Override
     public ClientDto insertClient(ClientRegisterDto clientRegisterDto) {
         User user = clientMapper.clientRegisterDtoToUser(clientRegisterDto);
         userRepository.save(user);
+
+        //sending to msg broker
+        CreateNotificationDto createNotifDto = new CreateNotificationDto("ACTIVATION_EMAIL","Zdravo %firstName% %lastName% !!!", 1L);
+        jmsTemplate.convertAndSend(destination, messageHelper.createTextMessage(createNotifDto));
+
         return clientMapper.clientToClientDto(user);
     }
 

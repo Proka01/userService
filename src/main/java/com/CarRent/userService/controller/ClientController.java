@@ -8,10 +8,7 @@ import com.CarRent.userService.service.ClientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/client")
@@ -31,5 +28,10 @@ public class ClientController {
     @PostMapping("/login")
     public ResponseEntity<TokenResponseDto> loginClient(@RequestBody @Validated TokenRequestDto tokenRequestDto) {
         return new ResponseEntity<>(clientService.login(tokenRequestDto), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ClientDto> findById(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(clientService.findClientById(id), HttpStatus.OK);
     }
 }

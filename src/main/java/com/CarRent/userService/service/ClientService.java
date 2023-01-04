@@ -7,6 +7,6 @@ import com.CarRent.userService.dto.TokenResponseDto;
 
 public interface ClientService {
     ClientDto insertClient(ClientRegisterDto clientRegisterDto);
-
+    ClientDto findClientById(Long id);
     TokenResponseDto login(TokenRequestDto tokenRequestDto);
 }

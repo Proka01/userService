@@ -34,6 +34,13 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
+    public ManagerDto findManagerById(Long id) {
+        return userRepository.findById(id)
+                .map(managerMapper::managerToManagerDto)
+                .orElseThrow(() -> new NotFoundException(String.format("Product with id: %d not found.", id)));
+    }
+
+    @Override
     public TokenResponseDto login(TokenRequestDto tokenRequestDto) {
         User user = userRepository
                 .findUserByUsernameAndPasswordAndRole_Id(tokenRequestDto.getUsername(), tokenRequestDto.getPassword(), 2L)

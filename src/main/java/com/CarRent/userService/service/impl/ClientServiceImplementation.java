@@ -15,6 +15,8 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 public class ClientServiceImplementation implements ClientService {
@@ -41,12 +43,23 @@ public class ClientServiceImplementation implements ClientService {
     public ClientDto insertClient(ClientRegisterDto clientRegisterDto) {
         User user = clientMapper.clientRegisterDtoToUser(clientRegisterDto);
         userRepository.save(user);
+        Optional<User> client = userRepository.findByUsername(clientRegisterDto.getUsername());
+        Long client_id = client.get().getId();
 
         //sending to msg broker
-        CreateNotificationDto createNotifDto = new CreateNotificationDto("ACTIVATION_EMAIL","Zdravo %firstName% %lastName% !!!", 1L);
+        //TODO u liniji iznad user se upise, ali ga je potrebno procitati opet iz baze da bismo
+        //TODO dohvatili njegov id koji se salje ka brokeru
+        CreateNotificationDto createNotifDto = new CreateNotificationDto("ACTIVATION_EMAIL","Zdravo %firstName% %lastName% !!!", client_id);
         jmsTemplate.convertAndSend(destination, messageHelper.createTextMessage(createNotifDto));
 
         return clientMapper.clientToClientDto(user);
+    }
+
+    @Override
+    public ClientDto findClientById(Long id) {
+        return userRepository.findById(id)
+                .map(clientMapper::clientToClientDto)
+                .orElseThrow(() -> new NotFoundException(String.format("Product with id: %d not found.", id)));
     }
 
     @Override

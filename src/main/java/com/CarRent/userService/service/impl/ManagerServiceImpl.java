@@ -2,6 +2,7 @@ package com.CarRent.userService.service.impl;
 
 import com.CarRent.userService.dto.*;
 import com.CarRent.userService.exception.NotFoundException;
+import com.CarRent.userService.helper.MessageHelper;
 import com.CarRent.userService.mapper.ManagerMapper;
 import com.CarRent.userService.model.User;
 import com.CarRent.userService.repository.UserRepository;
@@ -9,8 +10,12 @@ import com.CarRent.userService.security.service.TokenService;
 import com.CarRent.userService.service.ManagerService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -19,17 +24,35 @@ public class ManagerServiceImpl implements ManagerService {
     private final ManagerMapper managerMapper;
     private final UserRepository userRepository;
     private final TokenService tokenService;
+    private MessageHelper messageHelper;
+    private JmsTemplate jmsTemplate;
+    private String destination;
 
-    public ManagerServiceImpl(ManagerMapper managerMapper, UserRepository userRepository, TokenService tokenService) {
+    public ManagerServiceImpl(ManagerMapper managerMapper, UserRepository userRepository, TokenService tokenService,
+                              JmsTemplate jmsTemplate,
+                              @Value("${destination.createNotification}") String destination, MessageHelper messageHelper) {
         this.managerMapper = managerMapper;
         this.userRepository = userRepository;
         this.tokenService = tokenService;
+        this.jmsTemplate = jmsTemplate;
+        this.messageHelper = messageHelper;
+        this.destination = destination;
     }
 
     @Override
     public ManagerDto insertManager(ManagerRegisterDto managerRegisterDto) {
         User user = managerMapper.managerRegisterDtoToUser(managerRegisterDto);
         userRepository.save(user);
+
+        Optional<User> manager = userRepository.findByUsername(managerRegisterDto.getUsername());
+        Long manager_id = manager.get().getId();
+
+        //sending to msg broker
+        //TODO u liniji iznad user se upise, ali ga je potrebno procitati opet iz baze da bismo
+        //TODO dohvatili njegov id koji se salje ka brokeru
+        CreateNotificationDto createNotifDto = new CreateNotificationDto("ACTIVATION_EMAIL","Zdravo %firstName% %lastName% !!!", null,manager_id);
+        jmsTemplate.convertAndSend(destination, messageHelper.createTextMessage(createNotifDto));
+
         return managerMapper.managerToManagerDto(user);
     }
 

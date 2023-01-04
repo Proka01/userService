@@ -33,6 +33,13 @@ public class CreateNotificationDto {
         this.userId = userId;
     }
 
+    public CreateNotificationDto(String notificationType, String embededMsg, Long userId, Long managerId) {
+        this.notificationType = notificationType;
+        this.embededMsg = embededMsg;
+        this.userId = userId;
+        this.managerId = managerId;
+    }
+
 
     private String notificationType;
     private String embededMsg;

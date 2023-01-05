@@ -13,4 +13,6 @@ public interface ClientService {
     String verifyUser(String id);
 
     Long getDiscountForUser(Long id);
+
+    String updateUserRentDays(Long id,Long numOfDays);
 }

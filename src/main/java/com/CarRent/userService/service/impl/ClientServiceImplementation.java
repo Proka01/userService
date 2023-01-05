@@ -117,4 +117,12 @@ public class ClientServiceImplementation implements ClientService {
 
         return rank.getDiscount();
     }
+
+    @Override
+    public String updateUserRentDays(Long id, Long numOfDays) {
+        User user = userRepository.findById(id).get();
+        user.setRentDaysNumber(user.getRentDaysNumber()+numOfDays);
+        userRepository.save(user);
+        return "Successfully update number of rent days for user";
+    }
 }

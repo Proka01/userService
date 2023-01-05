@@ -39,4 +39,9 @@ public class ClientController {
     public ResponseEntity<String> verifyUser(@PathVariable("code") String code) {
        return new ResponseEntity<>(clientService.verifyUser(code), HttpStatus.OK);
     }
+
+    @GetMapping("/rank/{id}")
+    public ResponseEntity<Long> verifyUser(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(clientService.getDiscountForUser(id), HttpStatus.OK);
+    }
 }

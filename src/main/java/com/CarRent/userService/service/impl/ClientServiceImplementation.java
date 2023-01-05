@@ -61,6 +61,7 @@ public class ClientServiceImplementation implements ClientService {
         //TODO dohvatili njegov id koji se salje ka brokeru
         ActivationEmailDataDto activationEmailDataDto = new ActivationEmailDataDto("ACTIVATION_EMAIL",firstName,lastName,user_id,email);
         activationEmailDataDto.setActivationCode(activationCode);
+        activationEmailDataDto.setActivationLink(" http://localhost:8085/api/client/verify/"+activationCode);
         jmsTemplate.convertAndSend(destination, messageHelper.createTextMessage(activationEmailDataDto));
 
         return clientMapper.clientToClientDto(user);
@@ -92,7 +93,7 @@ public class ClientServiceImplementation implements ClientService {
     }
 
     @Override
-    public String verifyUser(Long code) {
+    public String verifyUser(String code) {
 
         User user = userRepository.findUserByActivationCode(code).orElseThrow(() -> new NotFoundException("Invalid activation code"));
 

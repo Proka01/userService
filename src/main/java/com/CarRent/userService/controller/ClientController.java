@@ -36,7 +36,7 @@ public class ClientController {
     }
 
     @GetMapping("/verify/{code}")
-    public ResponseEntity<String> verifyUser(@PathVariable("code") Long code) {
+    public ResponseEntity<String> verifyUser(@PathVariable("code") String code) {
        return new ResponseEntity<>(clientService.verifyUser(code), HttpStatus.OK);
     }
 }

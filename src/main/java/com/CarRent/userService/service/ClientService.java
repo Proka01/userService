@@ -10,5 +10,5 @@ public interface ClientService {
     ClientDto findClientById(Long id);
     TokenResponseDto login(TokenRequestDto tokenRequestDto);
 
-    String verifyUser(Long id);
+    String verifyUser(String id);
 }

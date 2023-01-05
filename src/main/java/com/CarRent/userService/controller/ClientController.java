@@ -27,11 +27,16 @@ public class ClientController {
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponseDto> loginClient(@RequestBody @Validated TokenRequestDto tokenRequestDto) {
-        return new ResponseEntity<>(clientService.login(tokenRequestDto), HttpStatus.CREATED);
+        return new ResponseEntity<>(clientService.login(tokenRequestDto), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ClientDto> findById(@PathVariable("id") Long id) {
         return new ResponseEntity<>(clientService.findClientById(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/verify/{code}")
+    public ResponseEntity<String> verifyUser(@PathVariable("code") Long code) {
+       return new ResponseEntity<>(clientService.verifyUser(code), HttpStatus.OK);
     }
 }

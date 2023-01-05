@@ -32,6 +32,7 @@ public class User {
     private String passportNumber;
     private Long rentDaysNumber;
     private Boolean restricted;
+    private String activationCode;
 
     //manager
     private String companyName;

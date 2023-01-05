@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @Transactional
@@ -42,6 +43,12 @@ public class ClientServiceImplementation implements ClientService {
     @Override
     public ClientDto insertClient(ClientRegisterDto clientRegisterDto) {
         User user = clientMapper.clientRegisterDtoToUser(clientRegisterDto);
+
+        Random rnd = new Random();
+        String activationCode = String.valueOf(rnd.nextInt(999999));
+
+        user.setActivationCode(activationCode);
+
         userRepository.save(user);
         Optional<User> userFromDB = userRepository.findByUsername(clientRegisterDto.getUsername());
         Long user_id = userFromDB.get().getId();
@@ -53,6 +60,7 @@ public class ClientServiceImplementation implements ClientService {
         //TODO u liniji iznad user se upise, ali ga je potrebno procitati opet iz baze da bismo
         //TODO dohvatili njegov id koji se salje ka brokeru
         ActivationEmailDataDto activationEmailDataDto = new ActivationEmailDataDto("ACTIVATION_EMAIL",firstName,lastName,user_id,email);
+        activationEmailDataDto.setActivationCode(activationCode);
         jmsTemplate.convertAndSend(destination, messageHelper.createTextMessage(activationEmailDataDto));
 
         return clientMapper.clientToClientDto(user);
@@ -72,11 +80,26 @@ public class ClientServiceImplementation implements ClientService {
                         .orElseThrow(() -> new NotFoundException(String
                         .format("User with username: %s and password: %s not found.", tokenRequestDto.getUsername(),
                                 tokenRequestDto.getPassword())));
+
+        if(user.getRestricted() || !user.getActivationCode().equals("verified")) return new TokenResponseDto("User restricted or not verified");
+
         //Create token payload
         Claims claims = Jwts.claims();
         claims.put("id", user.getId());
         claims.put("role", user.getRole().getName());
         //Generate token
         return new TokenResponseDto(tokenService.generate(claims));
+    }
+
+    @Override
+    public String verifyUser(Long code) {
+
+        User user = userRepository.findUserByActivationCode(code).orElseThrow(() -> new NotFoundException("Invalid activation code"));
+
+        user.setActivationCode("verified");
+
+        userRepository.save(user);
+
+        return "Successfully verified";
     }
 }

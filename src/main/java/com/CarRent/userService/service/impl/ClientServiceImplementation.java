@@ -43,14 +43,16 @@ public class ClientServiceImplementation implements ClientService {
     public ClientDto insertClient(ClientRegisterDto clientRegisterDto) {
         User user = clientMapper.clientRegisterDtoToUser(clientRegisterDto);
         userRepository.save(user);
-        Optional<User> client = userRepository.findByUsername(clientRegisterDto.getUsername());
-        Long client_id = client.get().getId();
+        Optional<User> userFromDB = userRepository.findByUsername(clientRegisterDto.getUsername());
+        Long user_id = userFromDB.get().getId();
+        String firstName = userFromDB.get().getFirstName();
+        String lastName = userFromDB.get().getLastName();
 
         //sending to msg broker
         //TODO u liniji iznad user se upise, ali ga je potrebno procitati opet iz baze da bismo
         //TODO dohvatili njegov id koji se salje ka brokeru
-        CreateNotificationDto createNotifDto = new CreateNotificationDto("ACTIVATION_EMAIL","Zdravo %firstName% %lastName% !!!", client_id);
-        jmsTemplate.convertAndSend(destination, messageHelper.createTextMessage(createNotifDto));
+        ActivationEmailDataDto activationEmailDataDto = new ActivationEmailDataDto("ACTIVATION_EMAIL",firstName,lastName,user_id);
+        jmsTemplate.convertAndSend(destination, messageHelper.createTextMessage(activationEmailDataDto));
 
         return clientMapper.clientToClientDto(user);
     }

@@ -43,15 +43,16 @@ public class ManagerServiceImpl implements ManagerService {
     public ManagerDto insertManager(ManagerRegisterDto managerRegisterDto) {
         User user = managerMapper.managerRegisterDtoToUser(managerRegisterDto);
         userRepository.save(user);
-
-        Optional<User> manager = userRepository.findByUsername(managerRegisterDto.getUsername());
-        Long manager_id = manager.get().getId();
+        Optional<User> userFromDB = userRepository.findByUsername(managerRegisterDto.getUsername());
+        Long user_id = userFromDB.get().getId();
+        String firstName = userFromDB.get().getFirstName();
+        String lastName = userFromDB.get().getLastName();
 
         //sending to msg broker
         //TODO u liniji iznad user se upise, ali ga je potrebno procitati opet iz baze da bismo
         //TODO dohvatili njegov id koji se salje ka brokeru
-        CreateNotificationDto createNotifDto = new CreateNotificationDto("ACTIVATION_EMAIL","Zdravo %firstName% %lastName% !!!", null,manager_id);
-        jmsTemplate.convertAndSend(destination, messageHelper.createTextMessage(createNotifDto));
+        ActivationEmailDataDto activationEmailDataDto = new ActivationEmailDataDto("ACTIVATION_EMAIL",firstName,lastName,user_id);
+        jmsTemplate.convertAndSend(destination, messageHelper.createTextMessage(activationEmailDataDto));
 
         return managerMapper.managerToManagerDto(user);
     }

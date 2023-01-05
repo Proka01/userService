@@ -47,11 +47,12 @@ public class ClientServiceImplementation implements ClientService {
         Long user_id = userFromDB.get().getId();
         String firstName = userFromDB.get().getFirstName();
         String lastName = userFromDB.get().getLastName();
+        String email = userFromDB.get().getEmail();
 
         //sending to msg broker
         //TODO u liniji iznad user se upise, ali ga je potrebno procitati opet iz baze da bismo
         //TODO dohvatili njegov id koji se salje ka brokeru
-        ActivationEmailDataDto activationEmailDataDto = new ActivationEmailDataDto("ACTIVATION_EMAIL",firstName,lastName,user_id);
+        ActivationEmailDataDto activationEmailDataDto = new ActivationEmailDataDto("ACTIVATION_EMAIL",firstName,lastName,user_id,email);
         jmsTemplate.convertAndSend(destination, messageHelper.createTextMessage(activationEmailDataDto));
 
         return clientMapper.clientToClientDto(user);

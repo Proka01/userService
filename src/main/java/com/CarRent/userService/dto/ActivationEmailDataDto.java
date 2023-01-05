@@ -13,11 +13,13 @@ public class ActivationEmailDataDto {
     private String lastName;
     private String activationLink;
     private String activationCode;
+    private String userEmail;
 
-    public ActivationEmailDataDto(String notificationType, String firstName, String lastName, Long userId) {
+    public ActivationEmailDataDto(String notificationType, String firstName, String lastName, Long userId,String userEmail) {
         this.notificationType = notificationType;
         this.firstName = firstName;
         this.lastName = lastName;
         this.userId = userId;
+        this.userEmail = userEmail;
     }
 }

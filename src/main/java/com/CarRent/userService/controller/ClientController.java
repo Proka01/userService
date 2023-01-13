@@ -1,9 +1,6 @@
 package com.CarRent.userService.controller;
 
-import com.CarRent.userService.dto.ClientDto;
-import com.CarRent.userService.dto.ClientRegisterDto;
-import com.CarRent.userService.dto.TokenRequestDto;
-import com.CarRent.userService.dto.TokenResponseDto;
+import com.CarRent.userService.dto.*;
 import com.CarRent.userService.service.ClientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,5 +39,20 @@ public class ClientController {
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> verifyUser(@PathVariable("code") String code) {
        return new ResponseEntity<>(clientService.verifyUser(code), HttpStatus.OK);
+    }
+
+    @GetMapping("/rank/{id}")
+    public ResponseEntity<Long> getDiscountForUser(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(clientService.getDiscountForUser(id), HttpStatus.OK);
+    }
+
+    @PostMapping("/increment")
+    public ResponseEntity<String> incrementNumOfRentDays(@RequestBody @Validated ClientUpdateNumberOfRentDaysDto clientUpdateNumberOfRentDaysDto){
+        return new ResponseEntity<>(clientService.updateUserRentDays(clientUpdateNumberOfRentDaysDto.getUserId(), clientUpdateNumberOfRentDaysDto.getNumOfDaysToAdd()), HttpStatus.OK);
+    }
+
+    @PostMapping("/decrement")
+    public ResponseEntity<String> decrementNumOfRentDays(@RequestBody @Validated ClientUpdateNumberOfRentDaysDto clientUpdateNumberOfRentDaysDto){
+        return new ResponseEntity<>(clientService.updateUserRentDays(clientUpdateNumberOfRentDaysDto.getUserId(), -clientUpdateNumberOfRentDaysDto.getNumOfDaysToAdd()), HttpStatus.OK);
     }
 }

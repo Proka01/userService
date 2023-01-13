@@ -5,6 +5,8 @@ import com.CarRent.userService.exception.NotFoundException;
 import com.CarRent.userService.helper.MessageHelper;
 import com.CarRent.userService.mapper.ClientMapper;
 import com.CarRent.userService.model.User;
+import com.CarRent.userService.model.UserRank;
+import com.CarRent.userService.repository.UserRankRepository;
 import com.CarRent.userService.repository.UserRepository;
 import com.CarRent.userService.security.service.TokenService;
 import com.CarRent.userService.service.ClientService;
@@ -28,16 +30,18 @@ public class ClientServiceImplementation implements ClientService {
     private JmsTemplate jmsTemplate;
     private String destination;
     private final TokenService tokenService;
+    private final UserRankRepository userRankRepository;
 
     public ClientServiceImplementation(UserRepository userRepository, ClientMapper clientMapper,
                                        TokenService tokenService, JmsTemplate jmsTemplate,
-                                       @Value("${destination.createNotification}") String destination, MessageHelper messageHelper) {
+                                       @Value("${destination.createNotification}") String destination, MessageHelper messageHelper, UserRankRepository userRankRepository) {
         this.userRepository = userRepository;
         this.clientMapper = clientMapper;
         this.tokenService = tokenService;
         this.jmsTemplate = jmsTemplate;
         this.messageHelper = messageHelper;
         this.destination = destination;
+        this.userRankRepository = userRankRepository;
     }
 
     @Override
@@ -102,5 +106,23 @@ public class ClientServiceImplementation implements ClientService {
         userRepository.save(user);
 
         return "Successfully verified";
+    }
+
+    @Override
+    public Long getDiscountForUser(Long id) {
+
+        User user = userRepository.findById(id).get();
+
+        UserRank rank = userRankRepository.findRankForUser(user.getRentDaysNumber()).get();
+
+        return rank.getDiscount();
+    }
+
+    @Override
+    public String updateUserRentDays(Long id, Long numOfDays) {
+        User user = userRepository.findById(id).get();
+        user.setRentDaysNumber(user.getRentDaysNumber()+numOfDays);
+        userRepository.save(user);
+        return "Successfully update number of rent days for user";
     }
 }

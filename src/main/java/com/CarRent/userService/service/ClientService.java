@@ -11,4 +11,8 @@ public interface ClientService {
     TokenResponseDto login(TokenRequestDto tokenRequestDto);
 
     String verifyUser(String id);
+
+    Long getDiscountForUser(Long id);
+
+    String updateUserRentDays(Long id,Long numOfDays);
 }

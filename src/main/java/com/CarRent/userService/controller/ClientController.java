@@ -21,21 +21,25 @@ public class ClientController {
     }
 
     @PostMapping("/register")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<ClientDto> saveUser(@RequestBody @Validated ClientRegisterDto clientRegisterDto) {
         return new ResponseEntity<>(clientService.insertClient(clientRegisterDto), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<TokenResponseDto> loginClient(@RequestBody @Validated TokenRequestDto tokenRequestDto) {
         return new ResponseEntity<>(clientService.login(tokenRequestDto), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<ClientDto> findById(@PathVariable("id") Long id) {
         return new ResponseEntity<>(clientService.findClientById(id), HttpStatus.OK);
     }
 
     @GetMapping("/verify/{code}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> verifyUser(@PathVariable("code") String code) {
        return new ResponseEntity<>(clientService.verifyUser(code), HttpStatus.OK);
     }

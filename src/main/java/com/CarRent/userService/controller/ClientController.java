@@ -1,7 +1,9 @@
 package com.CarRent.userService.controller;
 
 import com.CarRent.userService.dto.*;
+import com.CarRent.userService.exception.NotFoundException;
 import com.CarRent.userService.service.ClientService;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -26,7 +28,12 @@ public class ClientController {
     @PostMapping("/login")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<TokenResponseDto> loginClient(@RequestBody @Validated TokenRequestDto tokenRequestDto) {
-        return new ResponseEntity<>(clientService.login(tokenRequestDto), HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(clientService.login(tokenRequestDto), HttpStatus.OK);
+        }
+        catch (NotFoundException e){
+            return new ResponseEntity<>(new TokenResponseDto("Credentials invalid"), HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/{id}")

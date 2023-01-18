@@ -15,6 +15,9 @@ import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Transactional
 public class AdminServiceImpl implements AdminService {
@@ -50,5 +53,18 @@ public class AdminServiceImpl implements AdminService {
         claims.put("role", user.getRole().getName());
         //Generate token
         return new TokenResponseDto(tokenService.generate(claims));
+    }
+
+    @Override
+    public List<ClientDto> getAllClients() {
+        List<User> userList = userRepository.findAllClients(    );
+        List<ClientDto> clientDtoList = new ArrayList<>();
+
+        for(User user : userList)
+        {
+            clientDtoList.add(clientMapper.clientToClientDto(user));
+        }
+
+        return clientDtoList;
     }
 }

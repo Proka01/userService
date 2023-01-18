@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -30,5 +32,12 @@ public class AdminController {
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<TokenResponseDto> loginClient(@RequestBody @Validated TokenRequestDto tokenRequestDto) {
         return new ResponseEntity<>(adminService.login(tokenRequestDto), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/getAllClients")
+    @CheckSecurity(roles = {"ROLE_ADMIN"})
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<List<ClientDto>> getAllNotifications(@RequestHeader String authorization) {
+        return new ResponseEntity<>(adminService.getAllClients(), HttpStatus.OK);
     }
 }

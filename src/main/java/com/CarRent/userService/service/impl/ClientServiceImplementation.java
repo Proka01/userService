@@ -17,6 +17,7 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.util.Optional;
 import java.util.Random;
 
@@ -124,5 +125,69 @@ public class ClientServiceImplementation implements ClientService {
         user.setRentDaysNumber(user.getRentDaysNumber()+numOfDays);
         userRepository.save(user);
         return "Successfully update number of rent days for user";
+    }
+
+    @Override
+    public String updateUsername(Long id, String username) {
+        User user = userRepository.findById(id).get();
+        user.setUsername(username);
+        userRepository.save(user);
+        return "Successfully updated username";
+    }
+
+    @Override
+    public String updatePassword(Long id, String password) {
+        User user = userRepository.findById(id).get();
+        user.setPassword(password);
+        userRepository.save(user);
+        return "Successfully updated password";
+    }
+
+    @Override
+    public String updateEmail(Long id, String email) {
+        User user = userRepository.findById(id).get();
+        user.setEmail(email);
+        userRepository.save(user);
+        return "Successfully updated email";
+    }
+
+    @Override
+    public String updateFirstName(Long id, String firstName) {
+        User user = userRepository.findById(id).get();
+        user.setFirstName(firstName);
+        userRepository.save(user);
+        return "Successfully updated firstName";
+    }
+
+    @Override
+    public String updateLastName(Long id, String lastName) {
+        User user = userRepository.findById(id).get();
+        user.setLastName(lastName);
+        userRepository.save(user);
+        return "Successfully updated lastName";
+    }
+
+    @Override
+    public String updatePhoneNumber(Long id, String phoneNumber) {
+        User user = userRepository.findById(id).get();
+        user.setPhoneNumber(phoneNumber);
+        userRepository.save(user);
+        return "Successfully updated phone number";
+    }
+
+    @Override
+    public String updateBirthDate(Long id, Date birthDate) {
+        User user = userRepository.findById(id).get();
+        user.setBirthDate(birthDate);
+        userRepository.save(user);
+        return "Successfully updated birth date";
+    }
+
+    @Override
+    public String updatePasseportNumber(Long id, String passeportNumber) {
+        User user = userRepository.findById(id).get();
+        user.setPassportNumber(passeportNumber);
+        userRepository.save(user);
+        return "Successfully updated passport number";
     }
 }

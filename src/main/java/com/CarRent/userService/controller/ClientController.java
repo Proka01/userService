@@ -2,6 +2,7 @@ package com.CarRent.userService.controller;
 
 import com.CarRent.userService.dto.*;
 import com.CarRent.userService.exception.NotFoundException;
+import com.CarRent.userService.security.CheckSecurity;
 import com.CarRent.userService.security.service.TokenService;
 import com.CarRent.userService.service.ClientService;
 import org.aspectj.weaver.ast.Not;
@@ -48,6 +49,13 @@ public class ClientController {
         System.out.println(authorization);
         return new ResponseEntity<>(clientService.findClientById(id), HttpStatus.OK);
     }
+
+    @GetMapping("/{id}")
+    @CheckSecurity(roles = {"ROLE_ADMIN"})
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<ClientDto> getByIdNoToken(@PathVariable("id") Long id,@RequestHeader String authorization) {
+            return new ResponseEntity<>(clientService.findClientById(id), HttpStatus.OK);
+        }
 
     ///////////////////////////////////////////////////////////////////////////////////////
     //////////////////////// CLIENT INFO UPDATE CRUD //////////////////////////////////////

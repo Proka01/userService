@@ -2,6 +2,7 @@ package com.CarRent.userService.controller;
 
 import com.CarRent.userService.dto.*;
 import com.CarRent.userService.exception.NotFoundException;
+import com.CarRent.userService.security.CheckSecurity;
 import com.CarRent.userService.security.service.TokenService;
 import com.CarRent.userService.service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,14 @@ public class ManagerController {
         Long id = tokenService.parseId(authorization);
         return new ResponseEntity<>(managerService.findManagerById(id), HttpStatus.OK);
     }
+
+    @GetMapping("/{id}")
+    @CheckSecurity(roles = {"ROLE_ADMIN"})
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<ManagerDto> getByIdNoToken(@PathVariable("id") Long id,@RequestHeader String authorization) {
+        return new ResponseEntity<>(managerService.findManagerById(id), HttpStatus.OK);
+    }
+
 
     ////////////////////////////////////////////////////////////////////////
     //////////// MANAGER UPDATE CRUD ///////////////////////////////////////

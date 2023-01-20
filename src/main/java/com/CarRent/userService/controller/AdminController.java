@@ -22,21 +22,18 @@ public class AdminController {
     }
 
     @PostMapping("/restrict")
-    @CrossOrigin(origins = "http://localhost:3000")
     @CheckSecurity(roles = {"ROLE_ADMIN"})
     public ResponseEntity<ClientDto> saveUser(@RequestBody @Validated ClientRestrictDto clientRestrictDto, @RequestHeader("Authorization") String authorization) {
         return new ResponseEntity<>(adminService.updateClientRestricted(clientRestrictDto), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<TokenResponseDto> loginClient(@RequestBody @Validated TokenRequestDto tokenRequestDto) {
         return new ResponseEntity<>(adminService.login(tokenRequestDto), HttpStatus.CREATED);
     }
 
     @GetMapping("/getAllClients")
     @CheckSecurity(roles = {"ROLE_ADMIN"})
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<List<ClientDto>> getAllNotifications(@RequestHeader String authorization) {
         return new ResponseEntity<>(adminService.getAllClients(), HttpStatus.OK);
     }

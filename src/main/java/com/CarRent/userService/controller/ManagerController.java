@@ -27,13 +27,11 @@ public class ManagerController {
 
 
     @PostMapping("/register")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<ManagerDto> saveUser(@RequestBody @Validated ManagerRegisterDto managerRegisterDto) {
         return new ResponseEntity<>(managerService.insertManager(managerRegisterDto), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<TokenResponseDto> loginClient(@RequestBody @Validated TokenRequestDto tokenRequestDto) {
         try {
             return new ResponseEntity<>(managerService.login(tokenRequestDto), HttpStatus.OK);
@@ -44,7 +42,6 @@ public class ManagerController {
     }
 
     @GetMapping("/findById")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<ManagerDto> findById(@RequestHeader String authorization) {
         Long id = tokenService.parseId(authorization);
         return new ResponseEntity<>(managerService.findManagerById(id), HttpStatus.OK);
@@ -52,7 +49,6 @@ public class ManagerController {
 
     @GetMapping("/{id}")
     @CheckSecurity(roles = {"ROLE_ADMIN"})
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<ManagerDto> getByIdNoToken(@PathVariable("id") Long id,@RequestHeader String authorization) {
         return new ResponseEntity<>(managerService.findManagerById(id), HttpStatus.OK);
     }
@@ -62,56 +58,48 @@ public class ManagerController {
     //////////// MANAGER UPDATE CRUD ///////////////////////////////////////
 
     @PutMapping("/updateUsername")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> updateUsername(@RequestBody @Validated UpdateAttribureDTO updateAttribureDTO, @RequestHeader String authorization) {
         Long id = tokenService.parseId(authorization);
         return new ResponseEntity<>(managerService.updateUsername(id, updateAttribureDTO.getValue()), HttpStatus.OK);
     }
 
     @PutMapping("/updatePassword")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> updatePassword(@RequestBody @Validated UpdateAttribureDTO updateAttribureDTO, @RequestHeader String authorization) {
         Long id = tokenService.parseId(authorization);
         return new ResponseEntity<>(managerService.updatePassword(id, updateAttribureDTO.getValue()), HttpStatus.OK);
     }
 
     @PutMapping("/updateEmail")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> updateEmail(@RequestBody @Validated UpdateAttribureDTO updateAttribureDTO, @RequestHeader String authorization) {
         Long id = tokenService.parseId(authorization);
         return new ResponseEntity<>(managerService.updateEmail(id, updateAttribureDTO.getValue()), HttpStatus.OK);
     }
 
     @PutMapping("/updateFirstName")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> updateFirstName(@RequestBody @Validated UpdateAttribureDTO updateAttribureDTO, @RequestHeader String authorization) {
         Long id = tokenService.parseId(authorization);
         return new ResponseEntity<>(managerService.updateFirstName(id, updateAttribureDTO.getValue()), HttpStatus.OK);
     }
 
     @PutMapping("/updateLastName")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> updateLastName(@RequestBody @Validated UpdateAttribureDTO updateAttribureDTO, @RequestHeader String authorization) {
         Long id = tokenService.parseId(authorization);
         return new ResponseEntity<>(managerService.updateLastName(id, updateAttribureDTO.getValue()), HttpStatus.OK);
     }
 
     @PutMapping("/updatePhoneNumber")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> updatePhoneNumber(@RequestBody @Validated UpdateAttribureDTO updateAttribureDTO, @RequestHeader String authorization) {
         Long id = tokenService.parseId(authorization);
         return new ResponseEntity<>(managerService.updatePhoneNumber(id, updateAttribureDTO.getValue()), HttpStatus.OK);
     }
 
     @PutMapping("/updateCompanyName")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> updateCompanyName(@RequestBody @Validated UpdateAttribureDTO updateAttribureDTO, @RequestHeader String authorization) {
         Long id = tokenService.parseId(authorization);
         return new ResponseEntity<>(managerService.updateCompanyName(id, updateAttribureDTO.getValue()), HttpStatus.OK);
     }
 
     @PutMapping("/updateBirthDate")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> updateBirthDate(@RequestBody @Validated UpdateAttribureDTO updateAttribureDTO, @RequestHeader String authorization) {
         Long id = tokenService.parseId(authorization);
         Date birthDate = Date.valueOf(updateAttribureDTO.getValue());

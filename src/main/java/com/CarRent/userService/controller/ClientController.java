@@ -26,13 +26,11 @@ public class ClientController {
     }
 
     @PostMapping("/register")
-    @CrossOrigin(origins = {"http://localhost:3000","http://localhost:8761","http://localhost:8084"})
     public ResponseEntity<ClientDto> saveUser(@RequestBody @Validated ClientRegisterDto clientRegisterDto) {
         return new ResponseEntity<>(clientService.insertClient(clientRegisterDto), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    @CrossOrigin(origins = {"http://localhost:3000","http://localhost:8761","http://localhost:8084"})
     public ResponseEntity<TokenResponseDto> loginClient(@RequestBody @Validated TokenRequestDto tokenRequestDto) {
         try {
             return new ResponseEntity<>(clientService.login(tokenRequestDto), HttpStatus.OK);
@@ -43,7 +41,6 @@ public class ClientController {
     }
 
     @GetMapping("/findById")
-    @CrossOrigin(origins = {"http://localhost:3000","http://localhost:8761","http://localhost:8084"})
     public ResponseEntity<ClientDto> findById(@RequestHeader String authorization) {
         Long id = tokenService.parseId(authorization);
         System.out.println(authorization);
@@ -52,7 +49,6 @@ public class ClientController {
 
     @GetMapping("/{id}")
     @CheckSecurity(roles = {"ROLE_ADMIN"})
-    @CrossOrigin(origins = {"http://localhost:3000","http://localhost:8761","http://localhost:8084"})
     public ResponseEntity<ClientDto> getByIdNoToken(@PathVariable("id") Long id,@RequestHeader String authorization) {
             return new ResponseEntity<>(clientService.findClientById(id), HttpStatus.OK);
         }
@@ -60,56 +56,48 @@ public class ClientController {
     ///////////////////////////////////////////////////////////////////////////////////////
     //////////////////////// CLIENT INFO UPDATE CRUD //////////////////////////////////////
     @PutMapping("/updateUsername")
-    @CrossOrigin(origins = {"http://localhost:3000","http://localhost:8761","http://localhost:8084"})
     public ResponseEntity<String> updateUsername(@RequestBody @Validated UpdateAttribureDTO updateAttribureDTO, @RequestHeader String authorization) {
         Long id = tokenService.parseId(authorization);
         return new ResponseEntity<>(clientService.updateUsername(id, updateAttribureDTO.getValue()), HttpStatus.OK);
     }
 
     @PutMapping("/updatePassword")
-    @CrossOrigin(origins = {"http://localhost:3000","http://localhost:8761","http://localhost:8084"})
     public ResponseEntity<String> updatePassword(@RequestBody @Validated UpdateAttribureDTO updateAttribureDTO, @RequestHeader String authorization) {
         Long id = tokenService.parseId(authorization);
         return new ResponseEntity<>(clientService.updatePassword(id, updateAttribureDTO.getValue()), HttpStatus.OK);
     }
 
     @PutMapping("/updateEmail")
-    @CrossOrigin(origins = {"http://localhost:3000","http://localhost:8761","http://localhost:8084"})
     public ResponseEntity<String> updateEmail(@RequestBody @Validated UpdateAttribureDTO updateAttribureDTO, @RequestHeader String authorization) {
         Long id = tokenService.parseId(authorization);
         return new ResponseEntity<>(clientService.updateEmail(id, updateAttribureDTO.getValue()), HttpStatus.OK);
     }
 
     @PutMapping("/updateFirstName")
-    @CrossOrigin(origins = {"http://localhost:3000","http://localhost:8761","http://localhost:8084"})
     public ResponseEntity<String> updateFirstName(@RequestBody @Validated UpdateAttribureDTO updateAttribureDTO, @RequestHeader String authorization) {
         Long id = tokenService.parseId(authorization);
         return new ResponseEntity<>(clientService.updateFirstName(id, updateAttribureDTO.getValue()), HttpStatus.OK);
     }
 
     @PutMapping("/updateLastName")
-    @CrossOrigin(origins = {"http://localhost:3000","http://localhost:8761","http://localhost:8084"})
     public ResponseEntity<String> updateLastName(@RequestBody @Validated UpdateAttribureDTO updateAttribureDTO, @RequestHeader String authorization) {
         Long id = tokenService.parseId(authorization);
         return new ResponseEntity<>(clientService.updateLastName(id, updateAttribureDTO.getValue()), HttpStatus.OK);
     }
 
     @PutMapping("/updatePhoneNumber")
-    @CrossOrigin(origins = {"http://localhost:3000","http://localhost:8761","http://localhost:8084"})
     public ResponseEntity<String> updatePhoneNumber(@RequestBody @Validated UpdateAttribureDTO updateAttribureDTO, @RequestHeader String authorization) {
         Long id = tokenService.parseId(authorization);
         return new ResponseEntity<>(clientService.updatePhoneNumber(id, updateAttribureDTO.getValue()), HttpStatus.OK);
     }
 
     @PutMapping("/updatePassepotNumber")
-    @CrossOrigin(origins = {"http://localhost:3000","http://localhost:8761","http://localhost:8084"})
     public ResponseEntity<String> updatePasseportNumber(@RequestBody @Validated UpdateAttribureDTO updateAttribureDTO, @RequestHeader String authorization) {
         Long id = tokenService.parseId(authorization);
         return new ResponseEntity<>(clientService.updatePasseportNumber(id, updateAttribureDTO.getValue()), HttpStatus.OK);
     }
 
     @PutMapping("/updateBirthDate")
-    @CrossOrigin(origins = {"http://localhost:3000","http://localhost:8761","http://localhost:8084"})
     public ResponseEntity<String> updateBirthDate(@RequestBody @Validated UpdateAttribureDTO updateAttribureDTO, @RequestHeader String authorization) {
         Long id = tokenService.parseId(authorization);
         Date birthDate = Date.valueOf(updateAttribureDTO.getValue());
@@ -120,7 +108,6 @@ public class ClientController {
     /////////////////////////////////////////////////////////////////
 
     @GetMapping("/verify/{code}")
-    @CrossOrigin(origins = {"http://localhost:3000","http://localhost:8761","http://localhost:8084"})
     public ResponseEntity<String> verifyUser(@PathVariable("code") String code) {
        return new ResponseEntity<>(clientService.verifyUser(code), HttpStatus.OK);
     }
@@ -128,19 +115,16 @@ public class ClientController {
     //TODO dodaj kontrolere za ostale updateove
 
     @GetMapping("/rank/{id}")
-    @CrossOrigin(origins = {"http://localhost:3000","http://localhost:8761","http://localhost:8084"})
     public ResponseEntity<Long> getDiscountForUser(@PathVariable("id") Long id) {
         return new ResponseEntity<>(clientService.getDiscountForUser(id), HttpStatus.OK);
     }
 
     @PostMapping("/increment")
-    @CrossOrigin(origins = {"http://localhost:3000","http://localhost:8761","http://localhost:8084"})
     public ResponseEntity<String> incrementNumOfRentDays(@RequestBody @Validated ClientUpdateNumberOfRentDaysDto clientUpdateNumberOfRentDaysDto){
         return new ResponseEntity<>(clientService.updateUserRentDays(clientUpdateNumberOfRentDaysDto.getUserId(), clientUpdateNumberOfRentDaysDto.getNumOfDaysToAdd()), HttpStatus.OK);
     }
 
     @PostMapping("/decrement")
-    @CrossOrigin(origins = {"http://localhost:3000","http://localhost:8761","http://localhost:8084"})
     public ResponseEntity<String> decrementNumOfRentDays(@RequestBody @Validated ClientUpdateNumberOfRentDaysDto clientUpdateNumberOfRentDaysDto){
         return new ResponseEntity<>(clientService.updateUserRentDays(clientUpdateNumberOfRentDaysDto.getUserId(), -clientUpdateNumberOfRentDaysDto.getNumOfDaysToAdd()), HttpStatus.OK);
     }

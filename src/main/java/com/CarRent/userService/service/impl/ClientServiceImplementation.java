@@ -30,11 +30,12 @@ public class ClientServiceImplementation implements ClientService {
     private MessageHelper messageHelper;
     private JmsTemplate jmsTemplate;
     private String destination;
+    private String destinationForPassword;
     private final TokenService tokenService;
     private final UserRankRepository userRankRepository;
 
     public ClientServiceImplementation(UserRepository userRepository, ClientMapper clientMapper,
-                                       TokenService tokenService, JmsTemplate jmsTemplate,
+                                       TokenService tokenService, JmsTemplate jmsTemplate, @Value("${destination.passwordChanged}") String destinationForPassword,
                                        @Value("${destination.createNotification}") String destination, MessageHelper messageHelper, UserRankRepository userRankRepository) {
         this.userRepository = userRepository;
         this.clientMapper = clientMapper;
@@ -42,6 +43,7 @@ public class ClientServiceImplementation implements ClientService {
         this.jmsTemplate = jmsTemplate;
         this.messageHelper = messageHelper;
         this.destination = destination;
+        this.destinationForPassword = destinationForPassword;
         this.userRankRepository = userRankRepository;
     }
 
@@ -140,6 +142,19 @@ public class ClientServiceImplementation implements ClientService {
         User user = userRepository.findById(id).get();
         user.setPassword(password);
         userRepository.save(user);
+
+        //sending to msg broker
+        //TODO u liniji iznad user se upise, ali ga je potrebno procitati opet iz baze da bismo
+        //TODO dohvatili njegov id koji se salje ka brokeru
+        PasswordChangedEmailDTO passwordChangedEmailDTO = new PasswordChangedEmailDTO();
+        passwordChangedEmailDTO.setNotificationType("PASSEWORD_EMAIL");
+        passwordChangedEmailDTO.setFirstName(user.getFirstName());
+        passwordChangedEmailDTO.setLastName(user.getLastName());
+        passwordChangedEmailDTO.setPassword(password);
+        passwordChangedEmailDTO.setUserId(id);
+
+        jmsTemplate.convertAndSend(destinationForPassword, messageHelper.createTextMessage(passwordChangedEmailDTO));
+
         return "Successfully updated password";
     }
 
